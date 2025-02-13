@@ -4,7 +4,7 @@
  * Text Domain: direction_tgl
  * Plugin URI: https://github.com/wisamsalwa/direction_tgl
  * Description: Toggles the WordPress admin dashboard and website between RTL and LTR directions with a single click.
- * Version: 1.3
+ * Version: 1.4
  * Author: Wisam Essalwa, DeepSeek-V3
  * Author URI: https://github.com/wisamsalwa
  * License: GPL-2.0+
@@ -23,7 +23,7 @@ require_once plugin_dir_path(__FILE__) . 'plugin-updater.php';
 new Plugin_Updater(
     'direction_tgl', // Plugin slug
     'direction_tgl/direction_tgl.php', // Plugin file
-    'https://raw.githubusercontent.com/wisamsalwa/direction_tgl/main/update.json'  
+    'https://raw.githubusercontent.com/wisamsalwa/direction_tgl/refs/heads/main/update.json'  
 );
 
 
@@ -90,7 +90,7 @@ add_action('wp_enqueue_scripts', 'direction_tgl_enqueue_styles');    // For fron
 function direction_tgl_plugin_info($false, $action, $args) {
     if ($args->slug === 'direction_tgl') {
         // Get the remote update.json file
-        $remote = wp_remote_get('https://raw.githubusercontent.com/wisamsalwa/direction_tgl/main/update.json', array(
+        $remote = wp_remote_get('https://raw.githubusercontent.com/wisamsalwa/direction_tgl/refs/heads/main/update.json', array(
             'timeout' => 10,
             'headers' => array(
                 'Accept' => 'application/json'
