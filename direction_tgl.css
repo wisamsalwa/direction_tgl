@@ -1,0 +1,11 @@
+/* Style for the toggle button */
+.direction-tgl-button {
+    cursor: pointer;
+}
+
+/* Style for the icon */
+.direction-tgl-button .ab-icon {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 5px;
+}
