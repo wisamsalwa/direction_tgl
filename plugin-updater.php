@@ -18,10 +18,6 @@ class Plugin_Updater {
         $this->plugin_slug = $plugin_slug;
         $this->plugin_file = $plugin_file;
         $this->update_url = $update_url;
-
-        // Hook into the update process
-        add_filter('site_transient_update_plugins', array($this, 'check_for_updates'));
-        add_filter('upgrader_post_install', array($this, 'rename_update_folder'), 10, 3);
     }
 
     // Check for updates

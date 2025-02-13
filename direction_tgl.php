@@ -4,7 +4,7 @@
  * Text Domain: direction_tgl
  * Plugin URI: https://github.com/wisamsalwa/direction_tgl
  * Description: Toggles the WordPress admin dashboard and website between RTL and LTR directions with a single click.
- * Version: 1.4
+ * Version: 1.5
  * Author: Wisam Essalwa, DeepSeek-V3
  * Author URI: https://github.com/wisamsalwa
  * License: GPL-2.0+
@@ -23,12 +23,13 @@ require_once plugin_dir_path(__FILE__) . 'plugin-updater.php';
 new Plugin_Updater(
     'direction_tgl', // Plugin slug
     'direction_tgl/direction_tgl.php', // Plugin file
-    'https://raw.githubusercontent.com/wisamsalwa/direction_tgl/refs/heads/main/update.json'  
+    'https://raw.githubusercontent.com/wisamsalwa/direction_tgl/refs/heads/main/update.json'
 );
 
 
 // Set the direction for the admin dashboard
-function direction_tgl_set_direction() {
+function direction_tgl_set_direction()
+{
     global $wp_locale, $wp_styles;
 
     // Get the current user ID
@@ -36,7 +37,16 @@ function direction_tgl_set_direction() {
 
     // Check if the direction is being toggled
     if (isset($_GET['d'])) {
-        $direction = $_GET['d'] == 'rtl' ? 'rtl' : 'ltr';
+        // Sanitize the nonce
+        $nonce = isset($_GET['nonce']) ? sanitize_key($_GET['nonce']) : '';
+
+        // Verify the nonce
+        if (empty($nonce) || !wp_verify_nonce($nonce, 'toggle_direction_nonce')) {
+            wp_die('Security check failed.');
+        }
+
+        // Nonce verification succeeded; process the request
+        $direction = sanitize_text_field(wp_unslash($_GET['d'])) == 'rtl' ? 'rtl' : 'ltr';
         update_user_meta($_user_id, 'rtladminbar', $direction);
     } else {
         // Get the saved direction preference for the current user
@@ -57,7 +67,8 @@ function direction_tgl_set_direction() {
 add_action('init', 'direction_tgl_set_direction');
 
 // Add toggle button to the admin bar
-function direction_tgl_add_toggle_button($wp_admin_bar) {
+function direction_tgl_add_toggle_button($wp_admin_bar)
+{
     if (!current_user_can('edit_posts')) {
         return;
     }
@@ -68,10 +79,10 @@ function direction_tgl_add_toggle_button($wp_admin_bar) {
 
     // Add the toggle button
     $args = array(
-        'id'    => 'direction_tgl_button',
+        'id' => 'direction_tgl_button',
         'title' => '<span class="ab-icon">⇄</span> Toggle Direction', // Add icon here
-        'href'  => add_query_arg('d', $new_direction),
-        'meta'  => array(
+        'href' => add_query_arg('d', $new_direction),
+        'meta' => array(
             'class' => 'direction-tgl-button'
         )
     );
@@ -80,14 +91,19 @@ function direction_tgl_add_toggle_button($wp_admin_bar) {
 add_action('admin_bar_menu', 'direction_tgl_add_toggle_button', 999);
 
 // Enqueue CSS for the toggle button styling
-function direction_tgl_enqueue_styles() {
-    wp_enqueue_style('direction-tgl-style', plugin_dir_url(__FILE__) . 'direction_tgl.css');
+function direction_tgl_enqueue_styles()
+{
+    wp_enqueue_style('direction-tgl-style',
+    plugin_dir_url(__FILE__) . 'direction_tgl.css',
+    array() ,
+    '1.0');
 }
 add_action('admin_enqueue_scripts', 'direction_tgl_enqueue_styles'); // For admin
 add_action('wp_enqueue_scripts', 'direction_tgl_enqueue_styles');    // For front-end
 
 // Add plugin information to the "View details" popup
-function direction_tgl_plugin_info($false, $action, $args) {
+function direction_tgl_plugin_info($false, $action, $args)
+{
     if ($args->slug === 'direction_tgl') {
         // Get the remote update.json file
         $remote = wp_remote_get('https://raw.githubusercontent.com/wisamsalwa/direction_tgl/refs/heads/main/update.json', array(
@@ -116,9 +132,10 @@ function direction_tgl_plugin_info($false, $action, $args) {
 }
 add_filter('plugins_api', 'direction_tgl_plugin_info', 10, 3);
 
-function direction_tgl_load_textdomain() {
+function direction_tgl_load_textdomain()
+{
     load_plugin_textdomain('direction_tgl', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 }
 add_action('plugins_loaded', 'direction_tgl_load_textdomain');
 
- 
+
