@@ -4,7 +4,7 @@
  * Text Domain: direction_tgl
  * Plugin URI: https://github.com/wisamsalwa/direction_tgl
  * Description: Toggles the WordPress admin dashboard and website between RTL and LTR directions with a single click.
- * Version: 1.5
+ * Version: 1.6
  * Author: Wisam Essalwa, DeepSeek-V3
  * Author URI: https://github.com/wisamsalwa
  * License: GPL-2.0+
