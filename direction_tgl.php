@@ -4,7 +4,7 @@
  * Text Domain: direction_tgl
  * Plugin URI: https://github.com/wisamsalwa/direction_tgl
  * Description: Toggles the WordPress admin dashboard and website between RTL and LTR directions with a single click.
- * Version: 1.6
+ * Version: 1.7
  * Author: Wisam Essalwa, DeepSeek-V3
  * Author URI: https://github.com/wisamsalwa
  * License: GPL-2.0+
@@ -34,19 +34,9 @@ function direction_tgl_set_direction()
 
     // Get the current user ID
     $_user_id = get_current_user_id();
-
-    // Check if the direction is being toggled
+     // Check if the direction is being toggled
     if (isset($_GET['d'])) {
-        // Sanitize the nonce
-        $nonce = isset($_GET['nonce']) ? sanitize_key($_GET['nonce']) : '';
-
-        // Verify the nonce
-        if (empty($nonce) || !wp_verify_nonce($nonce, 'toggle_direction_nonce')) {
-            wp_die('Security check failed.');
-        }
-
-        // Nonce verification succeeded; process the request
-        $direction = sanitize_text_field(wp_unslash($_GET['d'])) == 'rtl' ? 'rtl' : 'ltr';
+        $direction = $_GET['d'] == 'rtl' ? 'rtl' : 'ltr';
         update_user_meta($_user_id, 'rtladminbar', $direction);
     } else {
         // Get the saved direction preference for the current user
